@@ -13,18 +13,19 @@ public class Main2 {
 
         Value.valueClass = Value.ValueClass.INT;
 
-        String exp = "* * - 23 45 - 12 34 + 12 4";
+        String exp = "- -1000 -100";
         StackMachine sm = new StackMachine();
         SynTree res = new SynTree(exp);
 
         Operand result = sm.execute(res);
         System.out.println(result);
 
-        System.out.println("****** A otra cosa mariposa *******");
-        ValueSeq v1 = new ValueSeq("9");
-        ValueSeq v2 = new ValueSeq("-1");
+        System.out.println("****** Cosas ValueSEQ *******");
+        ValueSeq v1 = new ValueSeq("1");
+        ValueSeq v2 = new ValueSeq("0");
 
-        v1.addValue(v2);
+        v1.subValue(v2);
+
 
     }
 }
