@@ -1,5 +1,6 @@
 package es.uned.lsi.eped.pract2018_2019;
 
+import es.uned.lsi.eped.DataStructures.Queue;
 import es.uned.lsi.eped.DataStructures.Stack;
 
 public class ValueSeq extends Value {
@@ -72,7 +73,6 @@ public class ValueSeq extends Value {
         while (!result.isEmpty()) {
             int resul = result.getTop();
             this.value = this.value + resul;
-            //System.out.print(value);
             result.pop();
         }
     }
@@ -81,12 +81,15 @@ public class ValueSeq extends Value {
     /* Sabemos que el mayor es el valor numérico llamante */
     public void subValue(Value n) {
 
-        /*
-        todo repasar subValue
-         */
-
         String valorIni = value;
         String valorSum = n.toString();
+
+        //Si ambos valores son iguales, devolvemos 0 directamente
+
+        if (valorIni.equals(valorSum)){
+            this.value = "0";
+            return;
+        }
 
         apilaOperandos(valorIni, valorSum);
 
@@ -125,20 +128,23 @@ public class ValueSeq extends Value {
 
             if (op1.isEmpty() && op2.isEmpty()){
                 this.value = "";
-                int size = result.size();
 
                 while (!result.isEmpty()) {
 
-                    if (result.size()==1 && result.getTop() == 0){
-                        result.pop();
-                    }else{
                         int resul = result.getTop();
                         this.value = this.value + resul;
                         result.pop();
-                    }
                 }
-               // System.out.print(value);
+
+                while (value.startsWith("0")){
+                    value = value.substring(1);
+                }
+
             }
+            // Si el primer elemento del String es un 0, lo eliminarmos
+         /*   if (this.value.charAt(0) == '0'){
+                this.value = value.substring(1);
+            }*/
         }
     }
 
@@ -148,6 +154,13 @@ public class ValueSeq extends Value {
 
         String valorIni = value;
         String valorSum = n.toString();
+
+        //Si ambos valores son iguales, devolvemos 0 directamente
+
+        if (valorIni.equals(valorSum)){
+            this.value = "0";
+            return;
+        }
 
         apilaOperandos(valorIni, valorSum);
 
@@ -187,21 +200,22 @@ public class ValueSeq extends Value {
 
             if (op1.isEmpty() && op2.isEmpty()){
                 this.value = "";
-                int size = result.size();
 
                 while (!result.isEmpty()) {
-
 
                         int resul = result.getTop();
                         this.value = this.value + resul;
                         result.pop();
                     }
-
+                //Mientras el resultado empiece por 0, lo eliminamos
+                while (value.startsWith("0")){
+                    value = value.substring(1);
                 }
-               // System.out.print(value);
             }
         }
+    }
 
+        //Meotdo que añade 0 a las pilas
     private void anyadeZeros() {
         if (op1.isEmpty() && !op2.isEmpty()) {
             op1.push(0);
@@ -217,11 +231,46 @@ public class ValueSeq extends Value {
 
     /* Método que indica si el valor numérico llamante es mayor que el valor numérico parámetro */
     public boolean greater(Value n) {
+        /*
+        todo -> implemntar esto para numeros de mismo tamaño
+         */
+
+        Queue<Integer> llamante = new Queue<>();
+        Queue<Integer> parametro = new Queue<>();
+
+        String valorLlamante = n.toString();
+
+        if (this.value.length() > n.toString().length()){
+            return true;
+        }
+
+        if (n.toString().length() == this.value.length()){
+            for (int i = 0; i< this.value.length(); i++){
+                parametro.enqueue(Integer.parseInt(String.valueOf(valorLlamante.charAt(i))));
+                llamante.enqueue(Integer.parseInt(String.valueOf(this.value.charAt(i))));
+            }
+
+
+            while (!llamante.isEmpty()){
+                int llam = llamante.getFirst();
+                int param = parametro.getFirst();
+                llamante.dequeue();
+                parametro.dequeue();
+
+                if (llam > param){
+                    return true;
+                }
+            }
+        }
+
         return false;
     }
 
     /* Método que indica si el valor numérico es cero */
     public boolean isZero() {
+        if(this.value.equals("0")){
+            return true;
+        }
         return false;
     }
 
