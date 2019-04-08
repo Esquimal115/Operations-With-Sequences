@@ -16,7 +16,9 @@ public class StackMachine {
      * @return Operand
      */
 
-    private static Operand postOrden(BTree<Node> nodo) {
+    private Operand postOrden(BTree<Node> nodo) {
+
+        //Recorremos el arbol en postorden
 
         Node raiz = nodo.getRoot();
 
@@ -28,6 +30,10 @@ public class StackMachine {
             postOrden((BTree<Node>) nodo.getRightChild());
         }
 
+
+        /* Una vez leido el arbol, vamos comprobando si el nodo es un operando
+           o un operador
+        */
 
         if (raiz.getNodeType() == Node.NodeType.OPERAND) {
             Operand op = (Operand) raiz;
@@ -46,6 +52,8 @@ public class StackMachine {
 
             Operand operando1 = (Operand) valor1;
             Operand operando2 = (Operand) valor2;
+
+            //Dependiendo del tipo de operador leido realizaremos una operacion u otra
 
             switch (operator.getOperatorType()) {
                 case ADD:
@@ -69,6 +77,7 @@ public class StackMachine {
     }
 
     public StackMachine() {
+
     }
 
     /**
@@ -77,8 +86,8 @@ public class StackMachine {
      * @return Operand
      *
      */
-
     public Operand execute(SynTree syn) {
+
         Operand resultado = postOrden(syn.getSynTree());
         return resultado;
     }
