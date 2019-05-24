@@ -12,8 +12,6 @@ public class ValueSeq extends Value {
     private Stack<Integer> op2 = new Stack<>();
     private Stack<Integer> result = new Stack<>();
 
-
-
     /* Constructor: recibe un String con el valor numérico */
     public ValueSeq(String s) {
         this.value = s;
@@ -29,7 +27,6 @@ public class ValueSeq extends Value {
     public void addValue(Value n) {
 
         String valorIni = value;
-
         String valorSum =((ValueSeq)n).value;
 
         apilaOperandos(valorIni, valorSum);
@@ -106,9 +103,7 @@ public class ValueSeq extends Value {
 
             int aux1, aux2;
 
-            // Con este metodo anyadimos 0's a la pila en caso de que no tengan el mismo tamaño
             anyadeZeros();
-
 
             // Obtenemos el valor del top de la pila
             aux1 = op1.getTop();
@@ -142,14 +137,11 @@ public class ValueSeq extends Value {
                         this.value = this.value + resul;
                         result.pop();
                 }
-
-                while (value.startsWith("0")){
-                    value = value.substring(1);
-                }
-
+                removeZeros();
             }
         }
     }
+
 
     /* Método que modifica el valor numérico llamante, restándolo del valor numérico parámetro
      * Sabemos que el mayor es el valor numérico parámetro */
@@ -174,9 +166,7 @@ public class ValueSeq extends Value {
 
             int aux1, aux2;
 
-            // Con este metodo anyadimos 0's a la pila en caso de que no tengan el mismo tamaño
             anyadeZeros();
-
 
             // Obtenemos el valor del top de la pila
             aux1 = op1.getTop();
@@ -211,30 +201,17 @@ public class ValueSeq extends Value {
                         result.pop();
                     }
 
-                //Mientras el resultado empiece por 0, lo eliminamos
-                while (value.startsWith("0")){
-                    value = value.substring(1);
-                }
+                removeZeros(); //Mientras el resultado empiece por 0, lo eliminamos
             }
         }
     }
 
-        //Meotdo que añade 0 a las pilas
-    private void anyadeZeros() {
-        if (op1.isEmpty() && !op2.isEmpty()) {
-            op1.push(0);
-        }
-        if (!op1.isEmpty() && op2.isEmpty()) {
-            op2.push(0);
-        }
-    }
 
     /* Método que modifica el valor numérico llamante, multiplicándolo por el valor numérico parámetro */
     public void multValue(Value n) {
-        // TODO Falta implementar la multiplicación
 
         int cont = 0;
-        int carry=0;
+        int carry;
         int operando2;
         int res;
         ValueSeq acum = new ValueSeq("");
@@ -251,22 +228,23 @@ public class ValueSeq extends Value {
         //El numero de arriba se queda fijo como una lista (Multiplicando)
         //El numero de abajo se recorre como una pila (Multiplicador)
 
-
         for (int i = 1; i<= multip.length(); i++){
             multiplicando.insert(i, Integer.parseInt(String.valueOf(multip.charAt(i-1))));
         }
+
 
         for (int i = 0; i< multiplicador.length(); i ++){
             op2.push(Integer.parseInt(String.valueOf(multiplicador.charAt(i))));
         }
 
-        //Comenzamos a operar
-
+        //El while controla al multipliador
 
         while (!op2.isEmpty()) {
             operando2 = op2.getTop();
             carry = 0;
             op2.pop();
+
+            //El for se encarga de ir recorriendo la Lista del multiplicando
 
             for (int j = multiplicando.size(); j >= 1; j--) {
                 int operando1 = multiplicando.get(j);
@@ -284,8 +262,6 @@ public class ValueSeq extends Value {
 
                 res = res % 10;
                 result.push(res);
-
-
             }
 
             if (carry > 0){
@@ -300,7 +276,6 @@ public class ValueSeq extends Value {
                 resul = result.getTop();
                 aux = aux + resul;
                 result.pop();
-
             }
 
             if (cont > 0){
@@ -317,6 +292,7 @@ public class ValueSeq extends Value {
             cont ++;
 
         }
+
         this.value = acum.toString();
     }
 
@@ -346,7 +322,6 @@ public class ValueSeq extends Value {
                 llamante.enqueue(Integer.parseInt(String.valueOf(this.value.charAt(i))));
             }
 
-
             while (!llamante.isEmpty()){
                 int llam = llamante.getFirst();
                 int param = parametro.getFirst();
@@ -356,6 +331,9 @@ public class ValueSeq extends Value {
                 if (llam > param){
                     return true;
                 }
+                else if (llam > param){
+                    return false;
+                }
             }
         }
         return false;
@@ -364,23 +342,37 @@ public class ValueSeq extends Value {
     /* Método que indica si el valor numérico es cero */
     public boolean isZero() {
 
-      if (this.value.equals("0")? true : false){
+      if (this.value.equals("0")){
           return true;
-
       }
       return false;
     }
 
+    //Metodo para apilar los operandos de la suma y la resta
     private void apilaOperandos(String valorIni, String valorSum) {
-        for (int i = 0; i < valorIni.length(); i++) {
 
+        for (int i = 0; i < valorIni.length(); i++) {
             op1.push(Integer.parseInt(String.valueOf(valorIni.charAt(i))));
         }
 
         for (int i = 0; i < valorSum.length(); i++) {
-
             op2.push(Integer.parseInt(String.valueOf(valorSum.charAt(i))));
         }
-
     }
+
+    private void removeZeros() {
+        while (value.startsWith("0")) {
+            value = value.substring(1);
+        }
+    }
+
+    private void anyadeZeros() { //Meotdo que añade 0 a las pilas
+        if (op1.isEmpty() && !op2.isEmpty()) {
+            op1.push(0);
+        }
+        if (!op1.isEmpty() && op2.isEmpty()) {
+            op2.push(0);
+        }
+    }
+
 }
